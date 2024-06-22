@@ -1,0 +1,69 @@
+<script>
+    // U92725213
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js Bar Chart</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* Add any styling if necessary */
+    </style>
+</head>
+<body>
+    <script>
+        const dataset = [100, 420, 230, 850, 560, 925];
+        
+        // Set up SVG container
+        const svgWidth = 500;
+        const barHeight = 20;
+        const margin = 1;
+        const svgHeight = (barHeight + margin) * dataset.length;
+
+        const svg = d3.select("body")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight);
+
+        // Set up x-axis linear scale
+        const xScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset)])
+        .range([50, svgWidth]);
+
+        // Create groups for each data point
+        const barGroups = svg.selectAll("g")
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("transform", (d, i) => `translate(0, ${i * (barHeight + margin)})`);
+
+        // Draw bars
+        barGroups.append("rect")
+        .attr("width", d => xScale(d))
+        .attr("height", barHeight - margin)
+        .style("fill", "steelblue")
+        .transition()
+        .duration(1000) // Transition duration in milliseconds
+        .attr("width", d => xScale(d));
+
+        // Add text labels
+        barGroups.append("text")
+        .attr("x", d => xScale(d) + 5) // Adjust label position
+        .attr("y", barHeight / 2)
+        .attr("dy", "0.35em")
+        .text(d => d)
+        .style("fill", "white");
+
+        // Hover effect
+        barGroups.on("mouseover", function() {
+        d3.select(this).select("rect").style("fill", "orange");
+        })
+        .on("mouseout", function() {
+        d3.select(this).select("rect").style("fill", "steelblue");
+        });
+    </script>
+</body>
+</html>
